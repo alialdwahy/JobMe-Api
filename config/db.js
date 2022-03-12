@@ -1,16 +1,6 @@
-const mongoose = require("mongoose")
+const mongo = require('mongoose');
+const baseURL = 'mongodb+srv://gowi:paris055866@cluster0.x4jpf.mongodb.net/JobmeTest?retryWrites=true&w=majority';
+mongo.connect(process.env.MONGODB_URI || baseURL).then((db)=>{
+    console.log('Connected MONGODB');
+}).catch((error)=> console.log('Not Connected'));
 
-const connectDB = async () => {
-    
-
-    try {
-        const connect = await mongoose.connect(process.env.MONGO_URI); 
-        console.log(`MongoDB is connected successfully: ${connect.connection.host}`.cyan.bold)
-    } catch (error) {
-        console.log(`Unable to connect to MongoDB\n ${error.message}`.red.bold)
-        throw error 
-    } 
-} 
-
-
-module.exports = connectDB

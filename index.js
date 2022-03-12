@@ -1,7 +1,6 @@
 const express = require("express");
 require('dotenv').config();
 const morgan = require("morgan")
-const connectDB = require("./config/db")
 const colors = require("colors")
 const errorHandler = require("./middlewares/error")
 const fileUpload = require("express-fileupload")
@@ -10,10 +9,12 @@ const cookieParser = require('cookie-parser');
 const mongoSanitize = require('express-mongo-sanitize');
 const rateLimit = require('express-rate-limit')
 const cors = require('cors')
+require('./config/db')
 
 
 
 const app = express()
+const server = require('http').createServer(app);
 app.use(cookieParser());
 //dev logging middleware
 if (process.env.NODE_ENV === "development") {
@@ -22,6 +23,8 @@ if (process.env.NODE_ENV === "development") {
 
 //body parser middleware
 app.use(express.json())
+
+
 
 //File Uploading
 app.use(fileUpload())
@@ -42,15 +45,5 @@ app.use(express.static(path.join(__dirname, "public")))
 //error handler middleware
 app.use(errorHandler)
 
-const port = process.env.PORT || 5000;
-const start = async () => {
-  try {
-    await connectDB(process.env.MONGO_URL);
-    app.listen(port, () =>
-      console.log(`Server is listening on port ${port}...`),
-      console.log(`Database Connected`)
-    );
-  } catch (error) {
-    console.log(error);
-  }
-};
+const PORT = process.env.PORT || 5000;
+server.listen(PORT);
