@@ -6,101 +6,118 @@ const crypto = require("crypto")
 
 const UserProfaileSchema = new mongoose.Schema({
      Userid:{
-         type:Number
+         type:String,
+      require: true
      },
     //Persoanl
      username: {
-        type: String
+        type: String,
+      require: true
     },
     email: {
-        type: String
+        type: String,
+        require: true
     },
     DateOfBirth:
     {
         type:Date,
         required: [true, "Please add a Date Of Birth"],
-        default: "1/1/1990"
+        default: Date.now
     },
     Gender:{
         type:String,
-        enum: ["Male", "Female"]
+        enum: ["Male", "Female"],
+      require: true
     },
     
     Otherinformation:{
-        type:String
+        type:String,
+        require: true
     },
-
     //Education
     EducationName:{
-        type:String
+        type:String,
+        require: true
     },
     Specialization:{
-        type:string
+        type:string,
+        require: true
     },
     Educationlevel:{
-        type:string
+        type:string,
+        require: true
     },
     Ed_StartDate:{
         type:Date,
-        default: "1/1/1990"
+        default: Date.now
             },
     Ed_EndDate:{
         type:Date,
-        default: "1/1/1990"
+        default: Date.now
         },
     Appreciation:{
-        Type:string    
+        Type:string,
+        require: true
     },
     Country:{
-        type:string
-    },
-    
+        type:string,
+        require: true
+    },    
     //Company And Experiences 
     CompanyName:{
-        type:string
+        type:string,
+        require: true
     },
     Field:{
-        type:string
+        type:string,
+        require: true
     },
     Jobtitle:{
-        type:string
+        type:string,
+        require: true
     },
     Wo_StartDate:{
         type:Date,
-        default: "1/1/1990"
+        default: Date.now
     },
     Wo_EndDate:{
         type:Date,
-        default: "1/1/1990"
+        default: Date.now
     },
     JobDescription:{
-        type:string
+        type:string,
+        require: true
     },
     Country:{
-        type:string
+        type:string,
+        require: true
     },
 
     // Certificate or Course
     COCName:{
-        type:string
+        type:string,
+        require: true
     },
     NameOfDonor:{
-        type:string
+        type:string,
+        require: true
     },
     ObtainedDate:{
         type:Date,
-        default: "1/1/1990"
+        default: Date.now
     },
     Field:{
-        type:string
+        type:string,
+        require: true
     },
     Description:{
-        type:string
+        type:string,
+        require: true
     },
-
     //skills
     skills:{
-        type:string
+        type:string,
+        require: true
     }
     })
-    module.exports = new mongoose.model("UserProfaileSchema", UserProfaileSchema)
+    module.exports = new mongoose.model("UserProfaile", UserProfaileSchema)

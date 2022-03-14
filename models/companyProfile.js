@@ -1,31 +1,50 @@
 const mongoose = require("mongoose")
 const validator = require("validator")
-const bcrypt = require("bcryptjs")
-const jwt = require("jsonwebtoken")
-const crypto = require("crypto")
+
 
 const CompanyProfaileSchema = new mongoose.Schema({
      CompanyId:{
-         type:Number
+        type:String,
+        require: true
      },
     //Persoanl
     CompanyName: {
-        type: String
+        type: String,
+        require: true
+
     },
     email: {
-        type: String
+        type: String,
+        require: true
     },
     Employment:{
-        type:string
+        type:string,
+        require: true
     },
     EstablishmentDate:{
-        type:Date
+        type:Date,
+        default: Date.now
     },
     CompanySize:{
-        type:Number
+        type:Number,
+        require: true
+
     },
     OtherInformation:{
-        type:String
+        type:String,
+        require: true
+    },
+    Country:{
+        type:string,
+        default:"Kuwait"
+    },
+    City:{
+        type:string,
+        require: true
+    },
+    NumberOfEmploy:{
+        type:Number,
+        require: true
     }
 })
-module.exports = new mongoose.model("CompanyProfaileSchema", CompanyProfaileSchema)
+module.exports = new mongoose.model("CompanyProfaile", CompanyProfaileSchema)
