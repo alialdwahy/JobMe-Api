@@ -3,10 +3,6 @@ const mongoose = require("mongoose");
 
 const JobSchema = new mongoose.Schema(
   {
-    userId: {
-      type: String,
-      require: true,
-    },
     titleJob: {
       type: String,
       required: true,
@@ -18,6 +14,10 @@ const JobSchema = new mongoose.Schema(
     requirements: {
       type: String,
       required: true,
+    },
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User'
     },
   date:{
     type: Date,

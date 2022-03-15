@@ -30,7 +30,9 @@ const UserSchema = new mongoose.Schema({
         minlength: [6, "The password should not be less than 6 characters"]
     },
     resetPasswordToken: String,
-    resetPasswordExpire: Date
+    resetPasswordExpire: Date,
+    announcingMe: [ { type: mongoose.Schema.Types.ObjectId, ref: 'AnnouncingMe' } ],
+    job: [ { type: mongoose.Schema.Types.ObjectId, ref: 'Job' } ]
 
 }, {
     timestamps: true

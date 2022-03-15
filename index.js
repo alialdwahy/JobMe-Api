@@ -10,6 +10,8 @@ const mongoSanitize = require('express-mongo-sanitize');
 const rateLimit = require('express-rate-limit')
 const cors = require('cors')
 require('./config/db')
+const announcingMeRouter = require('./routers/announcingMe');
+const jobAdvertisementRouter = require ('./routers/jobAdvertisement');
 
 
 
@@ -40,7 +42,8 @@ const limiter = rateLimit({
 app.use(limiter) // Apply the rate limiting middleware to all requests
 app.use(cors()) //for cross origin resource security
 app.use(express.static(path.join(__dirname, "public")))
-
+app.use("/announcingMe", announcingMeRouter);
+app.use("/jobAdvertisement", jobAdvertisementRouter);
 //mount routers
 //error handler middleware
 app.use(errorHandler)

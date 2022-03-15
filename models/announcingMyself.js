@@ -2,10 +2,6 @@ const mongoose = require("mongoose");
 
 const AnnouncingMeSchema = new mongoose.Schema(
   {
-    userId: {
-      type: String,
-      require: true,
-    },
     titleJob: {
       type: String,
       required: true,
@@ -13,6 +9,10 @@ const AnnouncingMeSchema = new mongoose.Schema(
     jobDescirption: {
       type: String,
       required: true,
+      },
+      user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
       },
   date:{
     type: Date,
