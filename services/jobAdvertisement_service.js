@@ -1,7 +1,7 @@
 const errorMessages = require('../config/error.messages');
 
 const Job  = require('../models/jobAdvertisement');
-const User  = require('../models/user');
+const User  = require('../models/User');
 
  async function list({ limit=50,offset=0, ...args} = {}) {
     return await Job.find({})

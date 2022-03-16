@@ -1,7 +1,6 @@
 const express = require("express");
 require('dotenv').config();
 const morgan = require("morgan")
-const colors = require("colors")
 const errorHandler = require("./middlewares/error")
 const fileUpload = require("express-fileupload")
 const path = require("path")
