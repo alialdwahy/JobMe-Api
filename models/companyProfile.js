@@ -3,16 +3,10 @@ const validator = require("validator")
 
 
 const CompanyProfaileSchema = new mongoose.Schema({
-     CompanyId:{
-        type:String,
-        require: true
-     },
-    //Persoanl
-    CompanyName: {
-        type: String,
-        require: true
-
-    },
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+      },
     email: {
         type: String,
         require: true
@@ -46,5 +40,8 @@ const CompanyProfaileSchema = new mongoose.Schema({
         type:Number,
         require: true
     }
-})
-module.exports = new mongoose.model("CompanyProfaile", CompanyProfaileSchema)
+},
+{ timestamps: true }
+);
+const CompanyProfaile= new mongoose.model("CompanyProfaile", CompanyProfaileSchema);
+module.exports=CompanyProfaile;

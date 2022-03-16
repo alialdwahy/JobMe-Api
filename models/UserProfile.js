@@ -1,19 +1,12 @@
 const mongoose = require("mongoose")
 const validator = require("validator")
-const bcrypt = require("bcryptjs")
-const jwt = require("jsonwebtoken")
-const crypto = require("crypto")
 
 const UserProfaileSchema = new mongoose.Schema({
-     Userid:{
-         type:String,
-      require: true
-     },
-    //Persoanl
-     username: {
-        type: String,
-      require: true
-    },
+        //Persoanl
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+      },
     email: {
         type: String,
         require: true
@@ -119,5 +112,8 @@ const UserProfaileSchema = new mongoose.Schema({
         type:string,
         require: true
     }
-    })
-    module.exports = new mongoose.model("UserProfaile", UserProfaileSchema)
+    },
+    { timestamps: true }
+    );
+   const UserProfaile= new mongoose.model("UserProfaile", UserProfaileSchema);
+   module.exports =UserProfaile;
