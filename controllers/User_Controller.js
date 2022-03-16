@@ -16,6 +16,9 @@ const operations = {
 
         }
     },
+    get:async(req,res,next)=>{},
+    delete:async(req,res,next)=>{},
+
     create:async(req, res, next) => {
         try {
             const Userdata = req.body;
@@ -26,7 +29,7 @@ const operations = {
             res.status(500).send(errorMessages.SERVER_ERROR);
         }
     },
-    deletet:async(req, res, next) => {
+    delete:async(req, res, next) => {
         const { UserId } = req.params;
         try {
             const data = await User.delete(UserId);
