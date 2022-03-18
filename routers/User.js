@@ -1,3 +1,4 @@
+const errorMessages = require('../config/error.messages');
 
 const  express = require('express');
 const User = require('../models/User');
