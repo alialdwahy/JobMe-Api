@@ -1,10 +1,11 @@
 
-const  express = require('express');
-const User = require('../models/User');
+const router = require('express').Router();
+const User = require('../models/user');
+const config = require("../config/config");
+const jwt = require("jsonwebtoken");
 var bcrypt = require('bcrypt');
 
 
-const router = express.Router()
 
 router.post("/register", async (req, res) => {
       try {
@@ -15,7 +16,6 @@ router.post("/register", async (req, res) => {
             //..........................Create New User
             const newUser = new User({
               username: req.body.username,
-              email: req.body.email,
               password: hashedPassword,
             
             });
