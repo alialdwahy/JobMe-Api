@@ -11,7 +11,7 @@ const cors = require('cors')
 require('./config/db')
 const announcingMeRouter = require('./routers/announcingMe');
 const jobAdvertisementRouter = require ('./routers/jobAdvertisement');
-const User=require('./routers/User')
+const User = require('./routers/User')
 
 
 const app = express()
