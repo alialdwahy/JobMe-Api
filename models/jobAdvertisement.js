@@ -23,10 +23,11 @@ const JobSchema = new mongoose.Schema(
     type: Date,
     default: Date.now
   },
-     createdAt: {
-    type: Number,
-    default: Date.now
-}
+  createdBy: {
+    type: mongoose.Types.ObjectId,
+    ref: 'User',
+    required: [true, 'Please provide user'],
+  },
   },
   { timestamps: true }
 );

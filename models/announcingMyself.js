@@ -10,18 +10,15 @@ const AnnouncingMeSchema = new mongoose.Schema(
       type: String,
       required: true,
       },
-      user: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
-      },
   date:{
     type: Date,
     default: Date.now
   },
-     createdAt: {
-    type: Number,
-    default: Date.now
-}
+   createdBy: {
+  type: mongoose.Types.ObjectId,
+  ref: 'User',
+  required: [true, 'Please provide user'],
+},
   },
   { timestamps: true }
 );
