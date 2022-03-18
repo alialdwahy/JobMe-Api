@@ -1,10 +1,8 @@
-const errorMessages = require('../config/error.messages');
 
 const  express = require('express');
 const User = require('../models/User');
-
 var bcrypt = require('bcrypt');
- var bcrypt = require('bcryptjs');
+
 
 const router = express.Router()
 
@@ -41,7 +39,7 @@ return  res.status(200).json({
 router.post("/login", async (req, res) => {
       try {
         const user = await User.findOne( {
-           email: req.body.email 
+          username: req.body.username 
            
             
         });
