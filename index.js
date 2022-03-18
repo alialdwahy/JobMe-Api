@@ -11,7 +11,9 @@ const cors = require('cors')
 require('./config/db')
 const announcingMeRouter = require('./routers/announcingMe');
 const jobAdvertisementRouter = require ('./routers/jobAdvertisement');
-const User = require('./routers/User')
+const User = require ('./routers/User');
+
+
 
 
 const app = express()
@@ -43,7 +45,7 @@ app.use(cors()) //for cross origin resource security
 app.use(express.static(path.join(__dirname, "public")))
 app.use("/announcingMe", announcingMeRouter);
 app.use("/jobAdvertisement", jobAdvertisementRouter);
-app.use("/User",User)
+
 //mount routers
 //error handler middleware
 app.use(errorHandler)
