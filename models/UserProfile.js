@@ -3,14 +3,22 @@ const validator = require("validator")
 
 const UserProfaileSchema = new mongoose.Schema({
         //Persoanl
-    user: {
+        userid:{
+            type: String,
+            require: true,
+        },
+        username: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
       },
     email: {
         type: String,
-        require: true
+        require: true,
+        unique:true
     },
+    emailToken: {
+        type: String,
+      },
     DateOfBirth:
     {
         type:Date,
@@ -81,7 +89,7 @@ const UserProfaileSchema = new mongoose.Schema({
         type:string,
         require: true
     },
-    Country:{
+    Exp_Country:{
         type:string,
         require: true
     },
