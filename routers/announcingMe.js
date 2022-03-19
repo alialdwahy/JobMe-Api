@@ -1,16 +1,13 @@
 const router = require('express').Router();
-const User = require('../model/user');
+const User = require('../models/user');
 const AnnouncingMe = require('../models/announcingMyself');
-var bcrypt = require('bcrypt');
- var bcrypt = require('bcryptjs');
-const jwt = require("jsonwebtoken");
 let middleware = require("../config/middleware");
-const UserFilter = require("../utils/userFilter");
-const config = require("../config/config");
+const JobFilter = require("../utils/jobFilter");
 
 
 
-  router.post("/announcingMe", async (req, res) => {
+
+  router.post("/", async (req, res) => {
     try {
       
         req.body.createdBy = req.user.userId
@@ -31,7 +28,7 @@ return res.send({
   msg:"موجود مسبقا"})
 }
 });
-//update user
+//user  user
 router.put("/:id", middleware.checkAuthorization,async  (req, res) => {
   try{
     const {
@@ -89,7 +86,7 @@ router.put("/:id", middleware.checkAuthorization,async  (req, res) => {
   });
   
   //get a user with pagenation 
-  router.get("/GetAllUser", middleware.checkAuthorization, async (req, res) => {
+  router.get("/GetAllannoucing", middleware.checkAuthorization, async (req, res) => {
     try {
       let {page , size } = req.query
       if(!page){
@@ -117,7 +114,7 @@ router.put("/:id", middleware.checkAuthorization,async  (req, res) => {
     }
   });
   //get a user by id
-  router.get("/GetAllUser/:id", middleware.checkAuthorization, async (req, res) => {
+  router.get("/annoucing/:id", middleware.checkAuthorization, async (req, res) => {
     try {
 
       const announcingMe =  await AnnouncingMe.find({_id: req.params.id}); 
@@ -135,7 +132,7 @@ router.put("/:id", middleware.checkAuthorization,async  (req, res) => {
     }
   });
   //get a user with pagenation 
-  router.get("/GetAllUse", middleware.checkAuthorization, async (req, res) => {
+  router.get("/filter/annoucing", middleware.checkAuthorization, async (req, res) => {
     try {
       const {page = 1, limit = 50} = req.query;
       const findJob = new JobFilter(AnnouncingMe.find(),req.query)
@@ -172,3 +169,4 @@ router.put("/:id", middleware.checkAuthorization,async  (req, res) => {
         msg:"لم يتم العثور",});
     }
   });
+  module.exports = router;

@@ -43,4 +43,4 @@ class JobFilter{
 
 
 
-module.exports = UserFilter;
+module.exports = JobFilter;
