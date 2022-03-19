@@ -3,14 +3,19 @@ const mongoose = require("mongoose")
 
 
 const CompanyProfaileSchema = new mongoose.Schema({
-    user: {
+   userid:{},
+    Coname: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
       },
     email: {
         type: String,
-        require: true
+        require: true,
+        unique:true
     },
+    emailToken: {
+        type: String,
+      },   
     Employment:{
         type:string,
         require: true
