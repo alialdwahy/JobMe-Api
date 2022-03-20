@@ -1,11 +1,11 @@
 const mongoose = require("mongoose")
 
-
-
 const CompanyProfaileSchema = new mongoose.Schema({
-   userid:{},
+   userid:{
+    type: String
+   },
     Coname: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: String,
         ref: 'User'
       },
     email: {
@@ -17,7 +17,7 @@ const CompanyProfaileSchema = new mongoose.Schema({
         type: String,
       },   
     Employment:{
-        type:string,
+        type:String,
         require: true
     },
     EstablishmentDate:{
@@ -34,11 +34,11 @@ const CompanyProfaileSchema = new mongoose.Schema({
         require: true
     },
     Country:{
-        type:string,
+        type:String,
         default:"Kuwait"
     },
     City:{
-        type:string,
+        type:String,
         require: true
     },
     NumberOfEmploy:{

@@ -53,7 +53,7 @@ router.post("/register", async (req, res) => {
       Field:req.body.Field,
       Description:req.body.Description,
       skills:req.body.skills,
-      emailToken:crypto.randomBytes(64).toString('hex'),
+     // emailToken:crypto.randomBytes(64).toString('hex'),
       });
   
       //.....................................Save User and Respond

@@ -3,18 +3,18 @@ const User = require('../models/user');
 const Company = require('../models/companyprofile');
 const config = require("../config/config");
 const nodemailer = require("nodemailer");
-
+const crypto = require('crypto');
 
 //......................................................................................................//
 //..................................Auth Email Application..............................................//
 //......................................................................................................//
 var transporter = nodemailer.createTransport({
-    host: 'smtp-mail.outlook.com',
-    port: 587,// true for 465, false for other ports
-    auth: {
-        user: 'Email@@', // generated ethereal user
-        pass: 'pass'  // generated ethereal password
-    },
+  host: 'smtp-mail.outlook.com',
+  port: 587,// true for 465, false for other ports
+  auth: {
+      user: 'bel7alal.kw@outlook.com', // generated ethereal user
+      pass: 'NajaHcom72$'  // generated ethereal password
+  },
     tls:{
       rejectUnauthorized:false
     }
@@ -23,7 +23,8 @@ var transporter = nodemailer.createTransport({
     try {
       //..........................Create New profile
       const newCompany = new Company({
-      Coname: req.body.username,
+      userid:req.body.id ,
+      Coname: req.body.Coname,
       email: req.body.email,
       Employment:req.body.Employment,
       EstablishmentDate:req.body.EstablishmentDate,
@@ -32,7 +33,7 @@ var transporter = nodemailer.createTransport({
       Country:req.body.Country,
       City:req.body.City,
       NumberOfEmploy:req.body.NumberOfEmploy,
-      emailToken:crypto.randomBytes(64).toString('hex'),
+      emailToken:crypto.randomBytes(64).toString('hex')
     });
 
     //.....................................Save Company and Respond
@@ -41,7 +42,7 @@ var transporter = nodemailer.createTransport({
 //................................................Send Email Verification..............................................//
 
     let mailOptions = {
-      from: '"تاكيد البريد الالكتروني"<Email@@>', // sender address
+      from: '"تاكيد البريد الالكتروني"<bel7alal.kw@outlook.com>', // sender address
       to: Company.email, // list of receivers
       subject: ' تطبيق وظفني', // Subject line
       text: ' ', // plain text body
@@ -68,10 +69,10 @@ var transporter = nodemailer.createTransport({
     });
   }
    catch (err) {
-   return res.send({
+   return res.status(400).send({
       statusCode:400,
       status:false,
-      msg:"موجود مسبقا"})
+      msg:"لم يتم التسجيل"})
   }
 });
 module.exports = router;

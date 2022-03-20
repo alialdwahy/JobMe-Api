@@ -1,15 +1,13 @@
-const mongoose = require("mongoose")
-const validator = require("validator")
+const mongoose = require("mongoose");
 
 const UserProfaileSchema = new mongoose.Schema({
         //Persoanl
         userid:{
-            type: String,
-            require: true,
+            type: String
         },
         username: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
+        type: String,
+        ref: 'user'
       },
     email: {
         type: String,
@@ -41,11 +39,11 @@ const UserProfaileSchema = new mongoose.Schema({
         require: true
     },
     Specialization:{
-        type:string,
+        type:String,
         require: true
     },
     Educationlevel:{
-        type:string,
+        type:String,
         require: true
     },
     Ed_StartDate:{
@@ -57,24 +55,24 @@ const UserProfaileSchema = new mongoose.Schema({
         default: Date.now
         },
     Appreciation:{
-        Type:string,
+        Type:String,
         require: true
     },
     Country:{
-        type:string,
+        type:String,
         require: true
     },    
     //Company And Experiences 
     CompanyName:{
-        type:string,
+        type:String,
         require: true
     },
     Field:{
-        type:string,
+        type:String,
         require: true
     },
     Jobtitle:{
-        type:string,
+        type:String,
         require: true
     },
     Wo_StartDate:{
@@ -86,21 +84,21 @@ const UserProfaileSchema = new mongoose.Schema({
         default: Date.now
     },
     JobDescription:{
-        type:string,
+        type:String,
         require: true
     },
     Exp_Country:{
-        type:string,
+        type:String,
         require: true
     },
 
     // Certificate or Course
     COCName:{
-        type:string,
+        type:String,
         require: true
     },
     NameOfDonor:{
-        type:string,
+        type:String,
         require: true
     },
     ObtainedDate:{
@@ -108,20 +106,19 @@ const UserProfaileSchema = new mongoose.Schema({
         default: Date.now
     },
     Field:{
-        type:string,
+        type:String,
         require: true
     },
     Description:{
-        type:string,
+        type:String,
         require: true
     },
     //skills
     skills:{
-        type:string,
+        type:String,
         require: true
     }
-    },
-    { timestamps: true }
+    }
     );
    const UserProfaile= new mongoose.model("UserProfaile", UserProfaileSchema);
    module.exports =UserProfaile;
