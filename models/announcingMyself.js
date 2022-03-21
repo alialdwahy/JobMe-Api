@@ -14,6 +14,10 @@ const AnnouncingMeSchema = new mongoose.Schema(
     type: Date,
     default: Date.now
   },
+  userid:{
+    type:String,
+    required:true
+  }
   },
   { timestamps: true }
 );

@@ -17,9 +17,6 @@ const UserSchema = new mongoose.Schema({
        
     },
 
-    announcingMe: [ { type: mongoose.Schema.Types.ObjectId, ref: 'AnnouncingMe' } ],
-    job: [ { type: mongoose.Schema.Types.ObjectId, ref: 'Job' } ]
-
 }, {
     timestamps: true
 })

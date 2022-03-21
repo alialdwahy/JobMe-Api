@@ -11,7 +11,7 @@ const JobFilter = require("../utils/jobFilter");
     try {
       
         const newJobAdvertisement = new JobAdvertisement({
-            createdBy: req.user.userId,
+            userid:req.body.userid,
             titleJob: req.body.titleJob,
             jobDescirption:req.body.jobDescirption,
             requirements:req.body.requirements,
@@ -34,53 +34,35 @@ return res.send({
 }
 });
 //user  user
-router.put("/:id", middleware.checkAuthorization,async  (req, res) => {
+router.put("/:userid",async  (req, res) => {
   try{
-    const {
-        body: { titleJob, jobDescirption, requirements },
-        user: { userId },
-        params: { id: jobId },
-      } = req
-    
-      if (titleJob === '' || jobDescirption === '' || requirements === '') {
-        throw new BadRequestError('Company or Position fields cannot be empty')
-      }
-      const jobAdvertisement = await JobAdvertisement.findByIdAndUpdate(
-        { _id: jobId, createdBy: userId },
-        req.body,
-        { new: true, runValidators: true }
-      )
-      if (!job) {
-        throw new NotFoundError(`No job with id ${jobId}`)
-      }
-
-      return res.status(200).send({
-        statusCode:200,
-        status:true,
-        msg: "تم تحديث المستخدم بنجاح",
-        data:jobAdvertisement,
-      });
-    }catch(err){
-      return res.status(500).send({ statusCode:500,status:false,msg:"فشل التحديث"});   
-    }
+        const jobAdvertisement = await JobAdvertisement.findOneAndUpdate(
+          { userid: req.params.userid },
+          {
+            $set: {
+                titleJob: req.body.titleJob,
+                jobDescirption:req.body.jobDescirption,
+                requirements:req.body.requirements,
+            },
+          },
+          { new: true },
+        );
+            return res.status(200).send({
+              statusCode:200,
+              status:true,
+              msg: "تم تحديث المستخدم بنجاح",
+              data:jobAdvertisement,
+            });
+          }catch(err){
+            return res.status(500).send({ statusCode:500,status:false,msg:"فشل التحديث"});   
+          }
 });
 
   //delete user
   router.delete("/:id",middleware.checkAuthorization, async (req, res) => {
 
-      try {
-        const {
-            user: { userId },
-            params: { id: jobId },
-          } = req
-        
-          const job = await JobAdvertisement.findByIdAndRemove({
-            _id: jobId,
-            createdBy: userId,
-          })
-          if (!job) {
-            throw new NotFoundError(`No job with id ${jobId}`)
-          }
+    try {
+        await JobAdvertisement.findOneAndDelete({_id: req.params.id});
         return res.status(200).json({status:true,statusCode:200,msg:"تم حذف الحساب"});
       } catch (err) {
          res.status(500).json({status:false,msg:"فشل حذف الحساب"});
