@@ -2,7 +2,10 @@ const router = require('express').Router();
 const User = require('../models/user');
 const Userprofile = require('../models/userprofile');
 const config = require("../config/config");
-const jwt = require("jsonwebtoken");
+const nodemailer = require("nodemailer");
+let middleware = require("../config/middleware");
+const crypto = require('crypto');
+
 
 
 //......................................................................................................//
@@ -26,7 +29,7 @@ router.post("/register", async (req, res) => {
     try {
             //..........................Create New User
       const newUser = new Userprofile({
-        userid: req.params.id ,
+      userid: req.body.id ,
       username: req.body.username,
       email: req.body.email,
       Gender:req.body.gender,
@@ -39,7 +42,6 @@ router.post("/register", async (req, res) => {
       Ed_StartDate:req.body.Ed_StartDate,
       Ed_EndDate:req.body.Ed_EndDate,
       Appreciation:req.body.Appreciation,
-      Country:req.body.Country,
       CompanyName:req.body.CompanyName,
       Field:req.body.Field,
       Jobtitle:req.body.Jobtitle,
@@ -50,7 +52,7 @@ router.post("/register", async (req, res) => {
       COCName:req.body.COCName,
       NameOfDonor:req.body.NameOfDonor,
       ObtainedDate:req.body.ObtainedDate,
-      Field:req.body.Field,
+      CoField:req.body.Field,
       Description:req.body.Description,
       skills:req.body.skills,
       emailToken:crypto.randomBytes(64).toString('hex'),
@@ -88,39 +90,37 @@ router.post("/register", async (req, res) => {
           msg: "تم إرسال بريد إلكتروني إلى حسابك يرجى التحقق",
       });
     } catch (err) {
-     return res.send({
+     return res.status(400).send({
         statusCode:400,
         status:false,
-        msg:"موجود مسبقا"})
+        msg:err+"موجود مسبقا"})
     }
   });
 
 
 
-  router.get("/myprofile/:id", middleware.checkAuthorization, async (req, res) => {
+  router.get("/findprofile", middleware.checkAuthorization, async (req, res) => {
     try {
-      const user = await Userprofile.findById(req.params.id);
-      const fivorat = await Promise.all(
-        user.like.map((fivoratId) => {
-          return User.findById(fivoratId);
-        })
-      );
-      let fivoratList = [];
-      fivorat.map((fivorat) => {
-        const { _id, username, profilePicture } = fivorat;
-        fivoratList.push({ _id, username, profilePicture });
-      });
-      res.status(200).json({
-        status:true,
-        statusCode:200,
-        data:fivoratList,
-        msg:"تم بنجاح",
-      })
+      const user = await Userprofile.findone(
+       {userid:req.body.userid});
+        if (!user) {
+          return res.status(500).json({
+            statusCode:500,
+            status:false,
+            msg: "خطأ",})
+        }
+        return res.status(200).send({
+          statusCode:200,
+          status:true,
+          msg: "تم التسجيل بنجاح",
+          data: user,
+        });
+    
     } catch (err) {
       res.status(500).json({
         status:false,
         statusCode:404,
-        msg:"لم يتم العثور",
+        msg:err+"لم يتم العثور",
       });
     }
   });
