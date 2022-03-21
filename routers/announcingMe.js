@@ -9,9 +9,13 @@ const JobFilter = require("../utils/jobFilter");
 
   router.post("/", async (req, res) => {
     try {
-      
-        req.body.createdBy = req.user.userId
-        const announcingMe = await AnnouncingMe.create(req.body)
+      const newAnnouncingMe = new AnnouncingMe({
+      titleJob: req.body.titleJob,
+      jobDescirption:req.body.jobDescirption,
+
+    
+      });
+      const announcingMe = await newAnnouncingMe.save();
 
 return  res.status(200).json({
   statusCode:200,

@@ -10,8 +10,13 @@ const JobFilter = require("../utils/jobFilter");
   router.post("/", async (req, res) => {
     try {
       
-        req.body.createdBy = req.user.userId
-        const jobAdvertisement = await JobAdvertisement.create(req.body)
+        const newJobAdvertisement = new JobAdvertisement({
+            createdBy: req.user.userId,
+            titleJob: req.body.titleJob,
+            jobDescirption:req.body.jobDescirption,
+            requirements:req.body.requirements,
+            });
+            const jobAdvertisement = await newJobAdvertisement.save();
 
 return  res.status(200).json({
   statusCode:200,
