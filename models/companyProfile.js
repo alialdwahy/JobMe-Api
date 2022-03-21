@@ -5,8 +5,7 @@ const CompanyProfaileSchema = new mongoose.Schema({
     type: String
    },
     Coname: {
-        type: String,
-        ref: 'User'
+        type: String     
       },
     email: {
         type: String,
@@ -21,11 +20,11 @@ const CompanyProfaileSchema = new mongoose.Schema({
         require: true
     },
     EstablishmentDate:{
-        type:Date,
+        type:String,
         default: Date.now
     },
     CompanySize:{
-        type:Number,
+        type:String,
         require: true
 
     },
@@ -42,7 +41,7 @@ const CompanyProfaileSchema = new mongoose.Schema({
         require: true
     },
     NumberOfEmploy:{
-        type:Number,
+        type:String,
         require: true
     }
 },

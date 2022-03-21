@@ -6,8 +6,7 @@ const UserProfaileSchema = new mongoose.Schema({
             type: String
         },
         username: {
-        type: String,
-        ref: 'user'
+        type: String
       },
     email: {
         type: String,
@@ -19,7 +18,7 @@ const UserProfaileSchema = new mongoose.Schema({
       },
     DateOfBirth:
     {
-        type:Date,
+        type:String,
         required: [true, "Please add a Date Of Birth"],
         default: Date.now
     },
@@ -47,16 +46,15 @@ const UserProfaileSchema = new mongoose.Schema({
         require: true
     },
     Ed_StartDate:{
-        type:Date,
+        type:String,
         default: Date.now
             },
     Ed_EndDate:{
-        type:Date,
+        type:String,
         default: Date.now
         },
     Appreciation:{
-        Type:String,
-        require: true
+        Type:String      
     },
     Country:{
         type:String,
@@ -76,11 +74,11 @@ const UserProfaileSchema = new mongoose.Schema({
         require: true
     },
     Wo_StartDate:{
-        type:Date,
+        type:String,
         default: Date.now
     },
     Wo_EndDate:{
-        type:Date,
+        type:String,
         default: Date.now
     },
     JobDescription:{
@@ -102,10 +100,10 @@ const UserProfaileSchema = new mongoose.Schema({
         require: true
     },
     ObtainedDate:{
-        type:Date,
+        type:String,
         default: Date.now
     },
-    Field:{
+    CoField:{
         type:String,
         require: true
     },

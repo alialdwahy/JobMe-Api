@@ -5,7 +5,7 @@ const server = require('http').createServer(app);
 const userRouter = require('../routers/user');
 const announcingMeRouter = require('../routers/announcingMe');
 const jobAdvertisementRouter = require('../routers/jobAdvertisement');
-//const UserProfile=require('../routers/UserProfile');
+const UserProfile=require('../routers/UserProfile');
 const CompanyProfile=require('../routers/CompanyProfile');
 
 const cors = require("cors");
@@ -18,7 +18,7 @@ app.use(cors());
 app.use('/user',userRouter);
 app.use('/annoucingMe',announcingMeRouter);
 app.use('/jobAdvertisement',jobAdvertisementRouter);
-//app.use("/UserProfile",UserProfile);
+app.use("/UserProfile",UserProfile);
 app.use("/CompanyProfile",CompanyProfile)
 
 
