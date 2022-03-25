@@ -5,9 +5,6 @@ const UserProfaileSchema = new mongoose.Schema({
         userid:{
             type: String
         },
-        username: {
-        type: String
-      },
     email: {
         type: String,
         require: true,
@@ -115,8 +112,12 @@ const UserProfaileSchema = new mongoose.Schema({
     skills:{
         type:String,
         require: true
-    }
-    }
+    },  verified: {
+        type: Boolean,
+        default: false 
+      }
+    },
+    { timestamps: true }
     );
    const UserProfaile= new mongoose.model("UserProfaile", UserProfaileSchema);
    module.exports =UserProfaile;

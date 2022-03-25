@@ -4,9 +4,6 @@ const CompanyProfaileSchema = new mongoose.Schema({
    userid:{
     type: String
    },
-    Coname: {
-        type: String     
-      },
     email: {
         type: String,
         require: true,
@@ -43,7 +40,11 @@ const CompanyProfaileSchema = new mongoose.Schema({
     NumberOfEmploy:{
         type:String,
         require: true
-    }
+    },
+      verified: {
+        type: Boolean,
+        default: false 
+      }
 },
 { timestamps: true }
 );
