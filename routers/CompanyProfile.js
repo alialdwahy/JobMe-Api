@@ -2,9 +2,10 @@ const router = require('express').Router();
 const Users = require('../models/user');
 const Companys = require('../models/companyprofile');
 const config = require("../config/config");
-const nodemailer = require("nodemailer");
+const nodemailer = require('nodemailer');
 const crypto = require('crypto');
-let middleware = require("../config/middleware");
+const jwt = require("jsonwebtoken");
+
 
 
 //......................................................................................................//
@@ -25,7 +26,7 @@ let middleware = require("../config/middleware");
     try {
       //..........................Create New profile
       const newCompany = new Companys ({
-      _id:req.body.userid,
+     // _id:req.body.userid,
       userid:req.body.userid,
       email:req.body.email,
       Employment:req.body.Employment,
@@ -98,9 +99,11 @@ router.get('/verify-email',async(req,res)=>{
     console.log(err)
   }
 });
-router.get('/findprofile/:userid', middleware.checkAuthorization, async (req, res) => {
+router.get("/findprofile",  async (req, res) => {
   try {
-    const Company = await Companys.findone({userid:req.params.userid}).exec();
+    const Company = await Companys.find({
+      userid:req.body.userid
+    });
          if (!Company) {
         return res.status(500).json({
           statusCode:500,
@@ -123,9 +126,9 @@ router.get('/findprofile/:userid', middleware.checkAuthorization, async (req, re
   }
 });
 
-router.put('/updateprofile/:userid', middleware.checkAuthorization, async (req, res)=> {
+router.put('/updateprofile',  async (req, res)=> {
   try {
-    await Users.findbyIdAndUpdate({_id: req.params.userid},{username: req.body.username }).exec();
+    await Users.findOneAndUpdate({_id: req.body.userid},{username: req.body.username }).exec();
     await Companys.findOneAndUpdate({userid: req.body.userid},{     
       email:req.body.email,
       Employment:req.body.Employment,

@@ -116,9 +116,9 @@ router.post("/register", async (req, res) => {
   });
   
 
-  router.get("/findprofile", middleware.checkAuthorization, async (req, res) => {
+  router.get("/findprofile", async (req, res) => {
     try {
-      const user = await Userprofile.findone({userid:req.body.userid});
+      const user = await Userprofile.find({userid:req.body.userid});
         if (!user) {
           return res.status(500).json({
             statusCode:500,
@@ -141,10 +141,10 @@ router.post("/register", async (req, res) => {
     }
   });
 
-  router.put('/updateprofile/:id', middleware.checkAuthorization, async (req, res)=> {
+  router.put('/updateprofile', async (req, res)=> {
     try {
-      await Users.findOneAndUpdate({_id: req.params.userid},{username: req.body.username });
-      await Userprofile.findOneAndUpdate({userid: req.params.userid},{
+      await Users.findOneAndUpdate({_id: req.body.userid},{username: req.body.username });
+      await Userprofile.findOneAndUpdate({userid: req.body.userid},{
         email: req.body.email,
         Gender:req.body.gender,
         country:req.body.country,
@@ -172,7 +172,7 @@ router.post("/register", async (req, res) => {
       })
       return res.status(200).json({statusCode:200,status:true,msg:"تم التعديل"})
   } catch (err) {
-      return res.status(400).json({statusCode:400,status:false,msg:"خطاء"})
+      return res.status(400).json({statusCode:400,status:false,msg:err+"خطاء"})
   }
   }),
 
