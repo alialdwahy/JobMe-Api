@@ -8,34 +8,34 @@ var bcrypt = require('bcrypt');
 
 
 router.post("/register", async (req, res) => {
-      try {
-            //..........................Generate New Password
-            const salt = await bcrypt.genSalt(10);
-            const hashedPassword = await bcrypt.hash(req.body.password, salt);
-        
-            //..........................Create New User
-            const newUser = new User({
-              username: req.body.username,
-              password: hashedPassword,
-            });
-        
-            //.....................................Save User and Respond
-            const user = await newUser.save(); 
-           return  res.status(200).json({
-          statusCode:200,
-          status:true,
-          data:user,
-          msg: "تم التسجيل",
-           });
-          }
+  try {
+    //..........................Generate New Password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(req.body.password, salt);
 
- catch (err) {
- return res.send({
-    statusCode:400,
-    status:false,
-    msg:"موجود مسبقا"})
-}
+    //..........................Create New User
+    const newUser = new User({
+      username: req.body.username,
+      password: hashedPassword,
+    });
+
+    //.....................................Save User and Respond
+    const user = await newUser.save();
+
+   return res.status(200).json({
+      statusCode:200,
+      status:true,
+      data:user,
+        msg: "تم إرسال بريد إلكتروني إلى حسابك يرجى التحقق",
+    });
+  } catch (err) {
+   return res.send({
+      statusCode:400,
+      status:false,
+      msg:"موجود مسبقا"})
+  }
 });
+
 router.post("/login", async (req, res) => {
       try {
         const user = await User.findOne( {
