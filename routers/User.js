@@ -17,17 +17,17 @@ router.post("/register", async (req, res) => {
             const newUser = new User({
               username: req.body.username,
               password: hashedPassword,
-        
             });
-
-            const user = await newUser.save();
-
-return  res.status(200).json({
-    statusCode:200,
-    status:true,
-      msg: "تم التسجيل",
-  });
-}
+        
+            //.....................................Save User and Respond
+            const user = await newUser.save(); 
+           return  res.status(200).json({
+          statusCode:200,
+          status:true,
+          data:user,
+          msg: "تم التسجيل",
+           });
+          }
 
  catch (err) {
  return res.send({
