@@ -101,10 +101,13 @@ router.get('/verify-email',async(req,res)=>{
 });
 router.get("/findprofile",  async (req, res) => {
   try {
+    const user1 = await Users.find({
+      _id:req.body.userid
+    });
     const Company = await Companys.find({
       userid:req.body.userid
     });
-         if (!Company) {
+         if (!Company || !user1) {
         return res.status(500).json({
           statusCode:500,
           status:false,
@@ -115,13 +118,14 @@ router.get("/findprofile",  async (req, res) => {
         status:true,
         msg: "تم التسجيل بنجاح",
         data: Company,
+        data1:user1,
       });
   
   } catch (err) {
     res.status(500).json({
       status:false,
       statusCode:404,
-      msg:err+"لم يتم العثور",
+      msg:"لم يتم العثور",
     });
   }
 });
@@ -142,7 +146,7 @@ router.put('/updateprofile',  async (req, res)=> {
     })
     return res.status(200).json({statusCode:200,status:true,msg:"تم التعديل"})
 } catch (err) {
-    return res.status(400).json({statusCode:400,status:false,msg:err+"خطاء"})
+    return res.status(400).json({statusCode:400,status:false,msg:"خطاء"})
 }
 }),
 
