@@ -8,34 +8,34 @@ var bcrypt = require('bcrypt');
 
 
 router.post("/register", async (req, res) => {
-      try {
-            //..........................Generate New Password
-            const salt = await bcrypt.genSalt(10);
-            const hashedPassword = await bcrypt.hash(req.body.password, salt);
-        
-            //..........................Create New User
-            const newUser = new User({
-              username: req.body.username,
-              password: hashedPassword,
-            
-            });
+  try {
+    //..........................Generate New Password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(req.body.password, salt);
 
-            const user = await newUser.save();
+    //..........................Create New User
+    const newUser = new User({
+      username: req.body.username,
+      password: hashedPassword,
+    });
 
-return  res.status(200).json({
-    statusCode:200,
-    status:true,
-      msg: "تم التسجيل",
-  });
-}
+    //.....................................Save User and Respond
+    const user = await newUser.save();
 
- catch (err) {
- return res.send({
-    statusCode:400,
-    status:false,
-    msg:"موجود مسبقا"})
-}
+   return res.status(200).json({
+      statusCode:200,
+      status:true,
+      data:user,
+        msg: "تم إرسال بريد إلكتروني إلى حسابك يرجى التحقق",
+    });
+  } catch (err) {
+   return res.send({
+      statusCode:400,
+      status:false,
+      msg:"موجود مسبقا"})
+  }
 });
+
 router.post("/login", async (req, res) => {
       try {
         const user = await User.findOne( {
@@ -65,6 +65,28 @@ router.post("/login", async (req, res) => {
           status:false,
           statusCode:500,
           });
+      }
+    });
+
+    router.put('/update-user-balance', async (req, res, next) => {
+      try {
+        const { user_id, amount } = req.body;
+    
+        if (!user_id || !amount){
+          console.log('ERROR: "user_id" and "amount" data are required.');
+          return res.status(400).json({ success: false });
+        }
+        
+        await User.findOneAndUpdate(
+          { _id: user_id },
+          { $inc: { coins: amount * -1 },
+        });
+        
+        console.log('User balance successfully updated')
+        return res.status(200).json({ success: true });
+      } catch (error) {
+        console.log('ERROR: ', error);
+        return res.status(400).json({ success: false });
       }
     });
 
