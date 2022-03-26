@@ -69,20 +69,10 @@ router.put("/:userid",async  (req, res) => {
   });
   
   //get a user with pagenation 
-  router.get("/GetAllannoucing", middleware.checkAuthorization, async (req, res) => {
+  router.get("/GetAllannoucing",async (req, res) => {
     try {
-      let {page , size } = req.query
-      if(!page){
-        page =1
-      }
-      if (!size){
-        size = 10;
-      }
-      const limit = parseInt(size)
 
-      const skip = (page -1)*size;
-
-      const announcingMe =  await AnnouncingMe.find({},{},{limit:limit,skip:skip}); 
+      const announcingMe =  await AnnouncingMe.find({},{},{limit:limit,skip:skip}).populate('User'); 
      return res.status(200).json({
           status:true,
           statusCode:200,
@@ -97,10 +87,10 @@ router.put("/:userid",async  (req, res) => {
     }
   });
   //get a user by id
-  router.get("/annoucing/:id", middleware.checkAuthorization, async (req, res) => {
+  router.get("/annoucing/:id", async (req, res) => {
     try {
 
-      const announcingMe =  await AnnouncingMe.find({_id: req.params.id}); 
+      const announcingMe =  await AnnouncingMe.find({_id: req.params.id}).populate('User'); 
      return res.status(200).json({
           status:true,
           statusCode:200,
@@ -115,7 +105,7 @@ router.put("/:userid",async  (req, res) => {
     }
   });
   //get a user with pagenation 
-  router.get("/filter/annoucing", middleware.checkAuthorization, async (req, res) => {
+  router.get("/filter/annoucing", async (req, res) => {
     try {
       const {page = 1, limit = 50} = req.query;
       const findJob = new JobFilter(AnnouncingMe.find(),req.query)

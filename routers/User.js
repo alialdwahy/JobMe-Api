@@ -17,7 +17,7 @@ router.post("/register", async (req, res) => {
             const newUser = new User({
               username: req.body.username,
               password: hashedPassword,
-            
+        
             });
 
             const user = await newUser.save();
@@ -65,6 +65,28 @@ router.post("/login", async (req, res) => {
           status:false,
           statusCode:500,
           });
+      }
+    });
+
+    router.put('/update-user-balance', async (req, res, next) => {
+      try {
+        const { user_id, amount } = req.body;
+    
+        if (!user_id || !amount){
+          console.log('ERROR: "user_id" and "amount" data are required.');
+          return res.status(400).json({ success: false });
+        }
+        
+        await User.findOneAndUpdate(
+          { _id: user_id },
+          { $inc: { coins: amount * -1 },
+        });
+        
+        console.log('User balance successfully updated')
+        return res.status(200).json({ success: true });
+      } catch (error) {
+        console.log('ERROR: ', error);
+        return res.status(400).json({ success: false });
       }
     });
 
