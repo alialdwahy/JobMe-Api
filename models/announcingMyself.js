@@ -10,6 +10,10 @@ const AnnouncingMeSchema = new mongoose.Schema(
       type: String,
       required: true,
       },
+      date: {
+       type:Date,
+       default:Date.now,
+      },
   expireDate:{
     type: Number,
     default: '10'
