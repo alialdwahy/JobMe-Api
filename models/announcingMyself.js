@@ -10,9 +10,9 @@ const AnnouncingMeSchema = new mongoose.Schema(
       type: String,
       required: true,
       },
-  date:{
-    type: Date,
-    default: Date.now
+  expireDate:{
+    type: Number,
+    default: '10'
   },
   userid:{
     type: mongoose.Schema.Types.ObjectId,ref: 'UserProfaile',
@@ -25,11 +25,12 @@ const AnnouncingMeSchema = new mongoose.Schema(
   expireAt: {
     type: Date,
     default: Date.now,
-    index: { expires: '10d' },
+    index: { expires: 'expireDate d' },
   },
   },
   { timestamps: true }
 );
+
 
 AnnouncingMeSchema.index({ country: 'text' });
 const AnnouncingMe = mongoose.model("AnnouncingMe", AnnouncingMeSchema);

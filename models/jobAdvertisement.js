@@ -25,14 +25,15 @@ const JobSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,ref: 'CompanyProfaile',
       required:true
     },
-  date:{
-    type: Date,
-    default: Date.now
-  },
+    expireDate:{
+      type: Number,
+      default: '10'
+    },
+  
   expireAt: {
     type: Date,
     default: Date.now,
-    index: { expires: '10d' },
+    index: { expires: 'expireDate d' },
   },
   },
   { timestamps: true }
