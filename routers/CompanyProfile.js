@@ -1,9 +1,12 @@
 const router = require('express').Router();
-const User = require('../models/user');
+const Users = require('../models/user');
 const Companys = require('../models/companyprofile');
 const config = require("../config/config");
-const nodemailer = require("nodemailer");
+const nodemailer = require('nodemailer');
 const crypto = require('crypto');
+const jwt = require("jsonwebtoken");
+
+
 
 //......................................................................................................//
 //..................................Auth Email Application..............................................//
@@ -23,8 +26,8 @@ const crypto = require('crypto');
     try {
       //..........................Create New profile
       const newCompany = new Companys ({
+     // _id:req.body.userid,
       userid:req.body.userid,
-      Coname:req.body.Coname,
       email:req.body.email,
       Employment:req.body.Employment,
       EstablishmentDate:req.body.EstablishmentDate,
@@ -72,7 +75,77 @@ const crypto = require('crypto');
    return res.status(400).send({
       statusCode:400,
       status:false,
-      msg:err+"لم يتم التسجيل"})
+      msg:"لم يتم التسجيل"})
   }
 });
+
+
+
+router.get('/verify-email',async(req,res)=>{
+  try{
+    const token = req.query.token
+    const Company = await Companys.findOne({emailToken:token})
+    if(Company){
+      Company.emailToken = null
+      Company.verified = true
+      await Company.save()
+     return res.redirect('https://behalal.herokuapp.com/confirmation-email')
+    }else{
+       res.redirect('https://behalal.herokuapp.com/not-confirmation-email')
+      console.log('لم يتم التحقق من البريد الإلكتروني')
+    }
+  }
+  catch(err){
+    console.log(err)
+  }
+});
+router.get("/findprofile",  async (req, res) => {
+  try {
+    const Company = await Companys.find({
+      userid:req.body.userid
+    });
+         if (!Company) {
+        return res.status(500).json({
+          statusCode:500,
+          status:false,
+          msg: "خطأ",})
+      }
+      return res.status(200).send({
+        statusCode:200,
+        status:true,
+        msg: "تم التسجيل بنجاح",
+        data: Company,
+      });
+  
+  } catch (err) {
+    res.status(500).json({
+      status:false,
+      statusCode:404,
+      msg:err+"لم يتم العثور",
+    });
+  }
+});
+
+router.put('/updateprofile',  async (req, res)=> {
+  try {
+    await Users.findOneAndUpdate({_id: req.body.userid},{username: req.body.username }).exec();
+    await Companys.findOneAndUpdate({userid: req.body.userid},{     
+      email:req.body.email,
+      Employment:req.body.Employment,
+      EstablishmentDate:req.body.EstablishmentDate,
+      CompanySize:req.body.CompanySize,
+      OtherInformation:req.body.OtherInformation,
+      Country:req.body.Country,
+      City:req.body.City,
+      NumberOfEmploy:req.body.NumberOfEmploy
+      
+    })
+    return res.status(200).json({statusCode:200,status:true,msg:"تم التعديل"})
+} catch (err) {
+    return res.status(400).json({statusCode:400,status:false,msg:err+"خطاء"})
+}
+}),
+
+
+
 module.exports = router;

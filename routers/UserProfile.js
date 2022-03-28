@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const User = require('../models/user');
+const Users = require('../models/user');
 const Userprofile = require('../models/userprofile');
 const config = require("../config/config");
 const nodemailer = require("nodemailer");
@@ -29,8 +29,7 @@ router.post("/register", async (req, res) => {
     try {
             //..........................Create New User
       const newUser = new Userprofile({
-      userid: req.body.id ,
-      username: req.body.username,
+      userid: req.body.userid ,
       email: req.body.email,
       Gender:req.body.gender,
       country:req.body.country,
@@ -93,16 +92,33 @@ router.post("/register", async (req, res) => {
      return res.status(400).send({
         statusCode:400,
         status:false,
-        msg:err+"موجود مسبقا"})
+        msg: "موجود مسبقا"})
     }
   });
 
+  router.get('/verify-email',async(req,res)=>{
+    try{
+      const token = req.query.token
+      const user = await Userprofile.findOne({emailToken:token})
+      if(user){
+        user.emailToken = null
+        user.verified = true
+        await user.save()
+       return res.redirect('https://behalal.herokuapp.com/confirmation-email')
+      }else{
+         res.redirect('https://behalal.herokuapp.com/not-confirmation-email')
+        console.log('لم يتم التحقق من البريد الإلكتروني')
+      }
+    }
+    catch(err){
+      console.log(err)
+    }
+  });
+  
 
-
-  router.get("/findprofile", middleware.checkAuthorization, async (req, res) => {
+  router.get("/findprofile", async (req, res) => {
     try {
-      const user = await Userprofile.findone(
-       {userid:req.body.userid});
+      const user = await Userprofile.find({userid:req.body.userid});
         if (!user) {
           return res.status(500).json({
             statusCode:500,
@@ -120,9 +136,45 @@ router.post("/register", async (req, res) => {
       res.status(500).json({
         status:false,
         statusCode:404,
-        msg:err+"لم يتم العثور",
+        msg: "لم يتم العثور",
       });
     }
   });
+
+  router.put('/updateprofile', async (req, res)=> {
+    try {
+      await Users.findOneAndUpdate({_id: req.body.userid},{username: req.body.username });
+      await Userprofile.findOneAndUpdate({userid: req.body.userid},{
+        email: req.body.email,
+        Gender:req.body.gender,
+        country:req.body.country,
+        DateOfBirth:req.body.DateOfBirth,
+        Otherinformation:req.body.Otherinformation,
+        EducationName:req.body.EducationName,
+        Specialization:req.body.Specialization,
+        Educationlevel:req.body.Educationlevel,
+        Ed_StartDate:req.body.Ed_StartDate,
+        Ed_EndDate:req.body.Ed_EndDate,
+        Appreciation:req.body.Appreciation,
+        CompanyName:req.body.CompanyName,
+        Field:req.body.Field,
+        Jobtitle:req.body.Jobtitle,
+        Wo_StartDate:req.body.Wo_StartDate,
+        Wo_EndDate:req.body.Wo_EndDate,
+        JobDescription:req.body.JobDescription,
+        Exp_Country:req.body.Exp_Country,
+        COCName:req.body.COCName,
+        NameOfDonor:req.body.NameOfDonor,
+        ObtainedDate:req.body.ObtainedDate,
+        CoField:req.body.Field,
+        Description:req.body.Description,
+        skills:req.body.skills
+      })
+      return res.status(200).json({statusCode:200,status:true,msg:"تم التعديل"})
+  } catch (err) {
+      return res.status(400).json({statusCode:400,status:false,msg:err+"خطاء"})
+  }
+  }),
+
 module.exports = router;
   
