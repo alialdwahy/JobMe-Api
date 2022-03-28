@@ -15,9 +15,9 @@ const AnnouncingMeSchema = new mongoose.Schema(
     default: Date.now
   },
   userid:{
-    type:String,
+    type: mongoose.Schema.Types.ObjectId,ref: 'UserProfaile',
     required:true
-  }
+  },
   },
   { timestamps: true }
 );

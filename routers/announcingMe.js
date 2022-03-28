@@ -7,7 +7,7 @@ const JobFilter = require("../utils/jobFilter");
 
 
 
-  router.post("/", async (req, res) => {
+  router.post("/", middleware.checkAuthorization, async (req, res) => {
     try {
       const newAnnouncingMe = new AnnouncingMe({
       titleJob: req.body.titleJob,
@@ -32,7 +32,7 @@ return res.send({
 }
 });
 //user  user
-router.put("/:userid",async  (req, res) => {
+router.put("/:userid",middleware.checkAuthorization,async  (req, res) => {
   try{
     const announcingMe = await AnnouncingMe.findOneAndUpdate(
       { userid: req.params.userid },
@@ -40,6 +40,7 @@ router.put("/:userid",async  (req, res) => {
         $set: {
             titleJob: req.body.titleJob,
             jobDescirption:req.body.jobDescirption,
+            
         },
       },
       { new: true },
@@ -69,10 +70,20 @@ router.put("/:userid",async  (req, res) => {
   });
   
   //get a user with pagenation 
-  router.get("/GetAllannoucing",async (req, res) => {
+  router.get("/GetAllannoucing",middleware.checkAuthorization,async (req, res) => {
     try {
+      let {page , size } = req.query
+      if(!page){
+        page =1
+      }
+      if (!size){
+        size = 10;
+      }
+      const limit = parseInt(size)
 
-      const announcingMe =  await AnnouncingMe.find({},{},{limit:limit,skip:skip}).populate('User'); 
+      const skip = (page -1)*size;
+      
+      const announcingMe =  await AnnouncingMe.find({},{},{limit:limit,skip:skip}).populate('userid'); 
      return res.status(200).json({
           status:true,
           statusCode:200,
@@ -87,10 +98,10 @@ router.put("/:userid",async  (req, res) => {
     }
   });
   //get a user by id
-  router.get("/annoucing/:id", async (req, res) => {
+  router.get("/annoucing/:id",middleware.checkAuthorization, async (req, res) => {
     try {
 
-      const announcingMe =  await AnnouncingMe.find({_id: req.params.id}).populate('User'); 
+      const announcingMe =  await AnnouncingMe.find({userid: req.params.id}).populate('userid'); 
      return res.status(200).json({
           status:true,
           statusCode:200,
@@ -105,10 +116,10 @@ router.put("/:userid",async  (req, res) => {
     }
   });
   //get a user with pagenation 
-  router.get("/filter/annoucing", async (req, res) => {
+  router.get("/filter/annoucing", middleware.checkAuthorization,async (req, res) => {
     try {
       const {page = 1, limit = 50} = req.query;
-      const findJob = new JobFilter(AnnouncingMe.find(),req.query)
+      const findJob = new JobFilter(AnnouncingMe.find().populate('userid'),req.query)
       .search()
       .filter()
       .pageination();
