@@ -7,7 +7,7 @@ const JobFilter = require("../utils/jobFilter");
 
 
 
-  router.post("/", async (req, res) => {
+  router.post("/", middleware.checkAuthorization, async (req, res) => {
     try {
       
         const newJobAdvertisement = new JobAdvertisement({
@@ -36,7 +36,7 @@ return res.send({
 }
 });
 //user  user
-router.put("/:userid",async  (req, res) => {
+router.put("/:userid",middleware.checkAuthorization, async  (req, res) => {
   try{
         const jobAdvertisement = await JobAdvertisement.findOneAndUpdate(
           { userid: req.params.userid },
@@ -77,7 +77,7 @@ router.put("/:userid",async  (req, res) => {
   });
   
   //get a user with pagenation 
-  router.get("/GetAllannoucing", middleware.checkAuthorization, async (req, res) => {
+  router.get("/GetAlloffer", middleware.checkAuthorization, async (req, res) => {
     try {
       let {page , size } = req.query
       if(!page){
@@ -105,7 +105,7 @@ router.put("/:userid",async  (req, res) => {
     }
   });
   //get a user by id
-  router.get("/annoucing/:id", middleware.checkAuthorization, async (req, res) => {
+  router.get("/offer/:id", middleware.checkAuthorization, async (req, res) => {
     try {
 
       const jobAdvertisement =  await JobAdvertisement.find({userid: req.params.id}).populate('userid'); 
@@ -123,7 +123,7 @@ router.put("/:userid",async  (req, res) => {
     }
   });
   //get a user with pagenation 
-  router.get("/filter/annoucing", middleware.checkAuthorization, async (req, res) => {
+  router.get("/filter/offer", middleware.checkAuthorization, async (req, res) => {
     try {
       const {page = 1, limit = 50} = req.query;
       const findJob = new JobFilter(JobAdvertisement.find().populate('userid'),req.query)
