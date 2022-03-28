@@ -13,8 +13,6 @@ const JobFilter = require("../utils/jobFilter");
       titleJob: req.body.titleJob,
       jobDescirption:req.body.jobDescirption,
       userid:req.body.userid,
-      gendar:req.body.gendar,
-      workTime:req.body.workTime, 
       });
       const announcingMe = await newAnnouncingMe.save();
 
@@ -42,8 +40,7 @@ router.put("/:userid",async  (req, res) => {
         $set: {
             titleJob: req.body.titleJob,
             jobDescirption:req.body.jobDescirption,
-            gendar:req.body.gendar,
-            workTime:req.body.workTime, 
+            
         },
       },
       { new: true },

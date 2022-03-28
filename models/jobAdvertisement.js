@@ -15,8 +15,14 @@ const JobSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    userid:{
+    gendar:{
       type:String,
+    },
+    workTime:{
+      type: String,
+    },
+    userid:{
+      type: mongoose.Schema.Types.ObjectId,ref: 'CompanyProfaile',
       required:true
     },
   date:{

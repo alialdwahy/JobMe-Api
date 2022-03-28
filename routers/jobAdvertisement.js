@@ -15,6 +15,8 @@ const JobFilter = require("../utils/jobFilter");
             titleJob: req.body.titleJob,
             jobDescirption:req.body.jobDescirption,
             requirements:req.body.requirements,
+            gendar:req.body.gendar,
+            workTime:req.body.workTime, 
             });
             const jobAdvertisement = await newJobAdvertisement.save();
 
@@ -43,6 +45,8 @@ router.put("/:userid",async  (req, res) => {
                 titleJob: req.body.titleJob,
                 jobDescirption:req.body.jobDescirption,
                 requirements:req.body.requirements,
+                gendar:req.body.gendar,
+                workTime:req.body.workTime, 
             },
           },
           { new: true },
@@ -86,7 +90,7 @@ router.put("/:userid",async  (req, res) => {
 
       const skip = (page -1)*size;
 
-      const jobAdvertisement =  await JobAdvertisement.find({},{},{limit:limit,skip:skip}); 
+      const jobAdvertisement =  await JobAdvertisement.find({},{},{limit:limit,skip:skip}).populate('userid'); 
      return res.status(200).json({
           status:true,
           statusCode:200,
@@ -104,7 +108,7 @@ router.put("/:userid",async  (req, res) => {
   router.get("/annoucing/:id", middleware.checkAuthorization, async (req, res) => {
     try {
 
-      const jobAdvertisement =  await JobAdvertisement.find({_id: req.params.id}); 
+      const jobAdvertisement =  await JobAdvertisement.find({userid: req.params.id}).populate('userid'); 
      return res.status(200).json({
           status:true,
           statusCode:200,
@@ -122,7 +126,7 @@ router.put("/:userid",async  (req, res) => {
   router.get("/filter/annoucing", middleware.checkAuthorization, async (req, res) => {
     try {
       const {page = 1, limit = 50} = req.query;
-      const findJob = new JobFilter(JobAdvertisement.find(),req.query)
+      const findJob = new JobFilter(JobAdvertisement.find().populate('userid'),req.query)
       .search()
       .filter()
       .pageination();
