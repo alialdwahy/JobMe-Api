@@ -18,6 +18,15 @@ const AnnouncingMeSchema = new mongoose.Schema(
     type: mongoose.Schema.Types.ObjectId,ref: 'UserProfaile',
     required:true
   },
+  DisplayType:{
+    type:Number,
+    default:"0"
+  },
+  expireAt: {
+    type: Date,
+    default: Date.now,
+    index: { expires: '10d' },
+  },
   },
   { timestamps: true }
 );
