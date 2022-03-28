@@ -10,14 +10,20 @@ const AnnouncingMeSchema = new mongoose.Schema(
       type: String,
       required: true,
       },
+      gendar:{
+        type:String,
+      },
+      workTime:{
+        type: String,
+      },
   date:{
     type: Date,
     default: Date.now
   },
   userid:{
-    type:String,
+    type: mongoose.Schema.Types.ObjectId,ref: 'UserProfaile',
     required:true
-  }
+  },
   },
   { timestamps: true }
 );
