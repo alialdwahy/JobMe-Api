@@ -16,7 +16,7 @@ const AnnouncingMeSchema = new mongoose.Schema(
       },
   expireDate:{
     type: Number,
-    default: '10'
+    default: '2'
   },
   userid:{
     type: mongoose.Schema.Types.ObjectId,ref: 'UserProfaile',
