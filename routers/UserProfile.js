@@ -5,8 +5,13 @@ const config = require("../config/config");
 const nodemailer = require("nodemailer");
 let middleware = require("../config/middleware");
 const crypto = require('crypto');
+//
 
-
+const multer = require("multer");
+const path = require("path");
+const { nextTick } = require('process');
+const fs = require('fs');
+const { truncate } = require('lodash');
 
 //......................................................................................................//
 //..................................Auth Email Application..............................................//
@@ -172,9 +177,62 @@ router.post("/register", async (req, res) => {
       })
       return res.status(200).json({statusCode:200,status:true,msg:"تم التعديل"})
   } catch (err) {
-      return res.status(400).json({statusCode:400,status:false,msg:err+"خطاء"})
+      return res.status(400).json({statusCode:400,status:false,msg:"خطاء"})
   }
-  }),
+  });
 
-module.exports = router;
-  
+///..........................................profile image........................................................
+
+const storage = multer.diskStorage({
+  destination: './uploads/images',
+  filename: (req, file, cb) => {
+
+      return cb(null, `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`)
+  }
+})
+
+
+const fileFilter = (req, file, cb) => {
+  if (file.mimetype == "image/jpeg" || file.mimetype == "image/png") {
+    cb(null, true);
+  } else {
+    cb(null, false);
+  }
+};
+
+const upload = multer({
+  storage: storage,
+  limits: {
+    fileSize: 1024 * 1024 * 6,
+  },
+  fileFilter: fileFilter,
+});
+
+//adding and update profile image
+router
+  .route("/add/image/:id")
+  .patch(middleware.checkAuthorization,upload.single("profilePicture"),async(req, res) => {
+  await  Userprofile.findOneAndUpdate(
+      { userid: req.params.id },
+      {
+        $set: {
+          profilePicture: req.file.path
+        },
+      },
+      { new: true },
+      (err, Userprofile) => {
+        if (err){ return res.status(500).send({ statusCode:500,status:false,msg:"فشل التحديث"});}
+        const { profilePicture} = Userprofile._doc; 
+        const response = {
+          statusCode:200,
+          status:true,
+          message: "تم تحديث الصورة بنجاح",
+          data: `https://g-bel-7-lalal-api-bf6ed.ondigitalocean.app/uploads/images/${req.file.originalname}`,
+        };
+        return res.status(200).send(response);
+      }
+    );
+  });
+
+
+module.exports = router;  

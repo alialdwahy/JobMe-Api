@@ -18,7 +18,16 @@ const UserProfaileSchema = new mongoose.Schema({
         type:String,
         required: [true, "Please add a Date Of Birth"],
         default: Date.now
-    },
+    },  
+     profilePicture: {
+        type:String,
+        default:"",
+      },
+      coins:
+      {
+       type:Number,
+       default:0   
+      },
     Gender:{
         type:String,
         enum: ["Male", "Female"],

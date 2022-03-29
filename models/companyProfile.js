@@ -11,7 +11,16 @@ const CompanyProfaileSchema = new mongoose.Schema({
     },
     emailToken: {
         type: String,
-      },   
+      }, 
+       coins:
+      {
+       type:Number,
+       default:0   
+      },
+         profilePicture: {
+        type:String,
+        default:"",
+      },  
     Employment:{
         type:String,
         require: true

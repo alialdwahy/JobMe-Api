@@ -5,7 +5,12 @@ const config = require("../config/config");
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 const jwt = require("jsonwebtoken");
+let middleware = require("../config/middleware");
 
+//
+
+const multer = require("multer");
+const path = require("path");
 
 
 //......................................................................................................//
@@ -22,7 +27,7 @@ const jwt = require("jsonwebtoken");
        rejectUnauthorized:false
      }
    });
-  router.post("/coprofile", async (req, res) => {
+  router.post("/coprofile", middleware.checkAuthorization, async (req, res) => {
     try {
       //..........................Create New profile
       const newCompany = new Companys ({
@@ -80,8 +85,8 @@ const jwt = require("jsonwebtoken");
 });
 
 
-
-router.get('/verify-email',async(req,res)=>{
+//...................................................Verification Email...................................
+router.get('/verify-email', middleware.checkAuthorization,async(req,res)=>{
   try{
     const token = req.query.token
     const Company = await Companys.findOne({emailToken:token})
@@ -99,13 +104,14 @@ router.get('/verify-email',async(req,res)=>{
     console.log(err)
   }
 });
-router.get("/findprofile",  async (req, res) => {
+//...................................Find user profile.....................................
+router.get("/findprofile/:userid",middleware.checkAuthorization,  async (req, res) => {
   try {
-    const user1 = await Users.find({
-      _id:req.body.userid
+    const user1 = await Users.findone({
+      _id:req.params.userid
     });
-    const Company = await Companys.find({
-      userid:req.body.userid
+    const Company = await Companys.findone({
+      userid:req.params.userid
     });
          if (!Company || !user1) {
         return res.status(500).json({
@@ -130,10 +136,11 @@ router.get("/findprofile",  async (req, res) => {
   }
 });
 
-router.put('/updateprofile',  async (req, res)=> {
+//...........................................update user profile.....................................
+router.put('/updateprofile/:userid',middleware.checkAuthorization,  async (req, res)=> {
   try {
-    await Users.findOneAndUpdate({_id: req.body.userid},{username: req.body.username }).exec();
-    await Companys.findOneAndUpdate({userid: req.body.userid},{     
+    await Users.findOneAndUpdate({_id: req.params.userid},{username: req.body.username }).exec();
+    await Companys.findOneAndUpdate({userid: req.params.userid},{     
       email:req.body.email,
       Employment:req.body.Employment,
       EstablishmentDate:req.body.EstablishmentDate,
@@ -148,8 +155,76 @@ router.put('/updateprofile',  async (req, res)=> {
 } catch (err) {
     return res.status(400).json({statusCode:400,status:false,msg:"خطاء"})
 }
-}),
+});
 
 
 
+///..........................................profile image........................................................
+
+const storage = multer.diskStorage({
+  destination: './uploads/images',
+  filename: (req, file, cb) => {
+
+      return cb(null, `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`)
+  }
+})
+
+
+const fileFilter = (req, file, cb) => {
+  if (file.mimetype == "image/jpeg" || file.mimetype == "image/png") {
+    cb(null, true);
+  } else {
+    cb(null, false);
+  }
+};
+
+const upload = multer({
+  storage: storage,
+  limits: {
+    fileSize: 1024 * 1024 * 6,
+  },
+  fileFilter: fileFilter,
+});
+
+//adding and update profile image
+router
+  .route("/add/image/:id")
+  .patch(middleware.checkAuthorization,upload.single("profilePicture"),async(req, res) => {
+  await  Companys.findOneAndUpdate(
+      { userid: req.params.id },
+      {
+        $set: {
+          profilePicture: req.file.path
+        },
+      },
+      { new: true },
+      (err, Companys) => {
+        if (err){ return res.status(500).send({ statusCode:500,status:false,msg:"فشل التحديث"});}
+        const { profilePicture} = Companys._doc; 
+        const response = {
+          statusCode:200,
+          status:true,
+          message: "تم تحديث الصورة بنجاح",
+          //data: `https://g-bel-7-lalal-api-bf6ed.ondigitalocean.app/uploads/images/${req.file.originalname}`,
+        };
+        return res.status(200).send(response);
+      }
+    );
+  });
+
+//....................................................coins................................................
+
+router.put('/coinst/:userid',middleware.checkAuthorization,  async (req, res)=> {
+ await  Companys.updateone({userid:req.params.userid},
+    {
+      $inc:{
+        coins:-d
+      }
+    })
+.then((res) => {
+return res.status(200).send({statusCode:200,status:true,msg:"تمت العملية"})
+}).catch((err)=>{
+return res.status(500).send({ statusCode:500,status:false,msg:"فشل التحديث"})
+})
+})
 module.exports = router;
