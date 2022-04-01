@@ -13,6 +13,33 @@ const multer = require("multer");
 const path = require("path");
 
 
+
+///..........................................profile image........................................................
+
+const storage = multer.diskStorage({
+  destination: './uploads/images',
+  filename: (req, file, cb) => {
+
+      return cb(null, `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`)
+  }
+})
+
+const fileFilter = (req, file, cb) => {
+  if (file.mimetype == "image/jpeg" || file.mimetype == "image/png") {
+    cb(null, true);
+  } else {
+    cb(new err("select image  .png or jpeg"), false);
+  }
+};
+
+const upload = multer({
+  storage: storage,
+  limits: {
+    fileSize: 1024 * 1024 * 6,
+  },
+  fileFilter: fileFilter,
+});
+
 //......................................................................................................//
 //..................................Auth Email Application..............................................//
 //......................................................................................................//
@@ -161,38 +188,9 @@ router.put('/updateprofile/:userid',middleware.checkAuthorization, upload.single
 });
 
 
-
-///..........................................profile image........................................................
-
-const storage = multer.diskStorage({
-  destination: './uploads/images',
-  filename: (req, file, cb) => {
-
-      return cb(null, `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`)
-  }
-})
-
-
-const fileFilter = (req, file, cb) => {
-  if (file.mimetype == "image/jpeg" || file.mimetype == "image/png") {
-    cb(null, true);
-  } else {
-    cb(null, false);
-  }
-};
-
-const upload = multer({
-  storage: storage,
-  limits: {
-    fileSize: 1024 * 1024 * 6,
-  },
-  fileFilter: fileFilter,
-});
-
 //adding and update profile image
-router
-  .route("/add/image/:id")
-  .patch(middleware.checkAuthorization,upload.single("profilePicture"),async(req, res) => {
+router.put("/add/image/:id",middleware.checkAuthorization,upload.single("profilePicture"),async(req, res) => {
+  try{
   await  Companys.findOneAndUpdate(
       { userid: req.params.id },
       {
@@ -212,7 +210,9 @@ router
         };
         return res.status(200).send(response);
       }
-    );
+    );}catch(err){
+      return res.status(404).send({ statusCode:404,status:false,msg:err});
+    }
   });
 
 //....................................................coins................................................

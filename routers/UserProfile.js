@@ -27,6 +27,34 @@ var transporter = nodemailer.createTransport({
       rejectUnauthorized:false
     }
   });
+
+  ///..........................................profile image........................................................
+
+const storage = multer.diskStorage({
+  destination: './uploads/images',
+  filename: (req, file, cb) => {
+
+      return cb(null, `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`)
+  }
+})
+
+
+const fileFilter = (req, file, cb) => {
+  if (file.mimetype == "image/jpeg" || file.mimetype == "image/png") {
+    cb(null, true);
+  } else {
+    cb(null, false);
+  }
+};
+
+const upload = multer({
+  storage: storage,
+  limits: {
+    fileSize: 1024 * 1024 * 6,
+  },
+  fileFilter: fileFilter,
+});
+
   //......................................................................................................//
 //................................................REGISTER..............................................//
 //......................................................................................................//
@@ -184,32 +212,6 @@ router.post("/register",upload.single("profilePicture"), async (req, res) => {
   }
   });
 
-///..........................................profile image........................................................
-
-const storage = multer.diskStorage({
-  destination: './uploads/images',
-  filename: (req, file, cb) => {
-
-      return cb(null, `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`)
-  }
-})
-
-
-const fileFilter = (req, file, cb) => {
-  if (file.mimetype == "image/jpeg" || file.mimetype == "image/png") {
-    cb(null, true);
-  } else {
-    cb(null, false);
-  }
-};
-
-const upload = multer({
-  storage: storage,
-  limits: {
-    fileSize: 1024 * 1024 * 6,
-  },
-  fileFilter: fileFilter,
-});
 
 //adding and update profile image
 router
