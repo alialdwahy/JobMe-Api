@@ -27,7 +27,7 @@ const path = require("path");
        rejectUnauthorized:false
      }
    });
-  router.post("/coprofile", middleware.checkAuthorization, async (req, res) => {
+  router.post("/coprofile", middleware.checkAuthorization, upload.single("profilePicture"),  async (req, res) => {
     try {
       //..........................Create New profile
       const newCompany = new Companys ({
@@ -41,6 +41,8 @@ const path = require("path");
       Country:req.body.Country,
       City:req.body.City,
       NumberOfEmploy:req.body.NumberOfEmploy,
+      profilePicture:req.file.path
+
    //   emailToken:crypto.randomBytes(64).toString('hex')
     });
 
@@ -137,7 +139,7 @@ router.get("/findprofile/:userid",middleware.checkAuthorization,  async (req, re
 });
 
 //...........................................update user profile.....................................
-router.put('/updateprofile/:userid',middleware.checkAuthorization,  async (req, res)=> {
+router.put('/updateprofile/:userid',middleware.checkAuthorization, upload.single("profilePicture"),  async (req, res)=> {
   try {
     await Users.findOneAndUpdate({_id: req.params.userid},{username: req.body.username }).exec();
     await Companys.findOneAndUpdate({userid: req.params.userid},{     
@@ -148,7 +150,8 @@ router.put('/updateprofile/:userid',middleware.checkAuthorization,  async (req, 
       OtherInformation:req.body.OtherInformation,
       Country:req.body.Country,
       City:req.body.City,
-      NumberOfEmploy:req.body.NumberOfEmploy
+      NumberOfEmploy:req.body.NumberOfEmploy,
+      profilePicture:req.file.path
       
     })
     return res.status(200).json({statusCode:200,status:true,msg:"تم التعديل"})

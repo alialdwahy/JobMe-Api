@@ -30,7 +30,7 @@ var transporter = nodemailer.createTransport({
   //......................................................................................................//
 //................................................REGISTER..............................................//
 //......................................................................................................//
-router.post("/register", async (req, res) => {
+router.post("/register",upload.single("profilePicture"), async (req, res) => {
     try {
             //..........................Create New User
       const newUser = new Userprofile({
@@ -59,6 +59,7 @@ router.post("/register", async (req, res) => {
       CoField:req.body.Field,
       Description:req.body.Description,
       skills:req.body.skills,
+      profilePicture:req.file.path,
       emailToken:crypto.randomBytes(64).toString('hex'),
       });
   
@@ -146,7 +147,7 @@ router.post("/register", async (req, res) => {
     }
   });
 
-  router.put('/updateprofile', async (req, res)=> {
+  router.put('/updateprofile',upload.single("profilePicture"),  async (req, res)=> {
     try {
       await Users.findOneAndUpdate({_id: req.body.userid},{username: req.body.username });
       await Userprofile.findOneAndUpdate({userid: req.body.userid},{
@@ -173,7 +174,9 @@ router.post("/register", async (req, res) => {
         ObtainedDate:req.body.ObtainedDate,
         CoField:req.body.Field,
         Description:req.body.Description,
-        skills:req.body.skills
+        skills:req.body.skills,
+        profilePicture:req.file.path,
+
       })
       return res.status(200).json({statusCode:200,status:true,msg:"تم التعديل"})
   } catch (err) {
@@ -227,7 +230,7 @@ router
           statusCode:200,
           status:true,
           message: "تم تحديث الصورة بنجاح",
-          data: `https://g-bel-7-lalal-api-bf6ed.ondigitalocean.app/uploads/images/${req.file.originalname}`,
+       //   data: `https://g-bel-7-lalal-api-bf6ed.ondigitalocean.app/uploads/images/${req.file.originalname}`,
         };
         return res.status(200).send(response);
       }
