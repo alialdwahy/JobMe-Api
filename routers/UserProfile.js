@@ -65,24 +65,31 @@ router.post("/register",upload.single("profilePicture"), async (req, res) =>
       country:req.body.country,
       DateOfBirth:req.body.DateOfBirth,
       Otherinformation:req.body.Otherinformation,
+      Certificates:{
+
       EducationName:req.body.EducationName,
       Specialization:req.body.Specialization,
       Educationlevel:req.body.Educationlevel,
       Ed_StartDate:req.body.Ed_StartDate,
       Ed_EndDate:req.body.Ed_EndDate,
-      Appreciation:req.body.Appreciation,
+      Appreciation:req.body.Appreciation
+      },
+      experience:{
       CompanyName:req.body.CompanyName,
       Field:req.body.Field,
       Jobtitle:req.body.Jobtitle,
       Wo_StartDate:req.body.Wo_StartDate,
       Wo_EndDate:req.body.Wo_EndDate,
       JobDescription:req.body.JobDescription,
-      Exp_Country:req.body.Exp_Country,
+      Exp_Country:req.body.Exp_Country
+    },
+    Certificate:{
       COCName:req.body.COCName,
       NameOfDonor:req.body.NameOfDonor,
       ObtainedDate:req.body.ObtainedDate,
       CoField:req.body.Field,
-      Description:req.body.Description,
+      Description:req.body.Description
+    },
       skills:req.body.skills,
       profilePicture:req.file.path,
       emailToken:crypto.randomBytes(64).toString('hex'),
@@ -94,7 +101,7 @@ router.post("/register",upload.single("profilePicture"), async (req, res) =>
   //................................................Send Email Verification..............................................//
   
       let mailOptions = {
-        from: '"تاكيد البريد الالكتروني"<bel7alal.kw@outlook.com>', // sender address
+        from: '"تاكيد البريد الالكتروني"<bel7alal.kw@outlook.com>', /// sender address
         to: user.email, // list of receivers
         subject: ' تطبيق وظفني', // Subject line
         text: ' ', // plain text body
@@ -182,24 +189,30 @@ router.post("/register",upload.single("profilePicture"), async (req, res) =>
         country:req.body.country,
         DateOfBirth:req.body.DateOfBirth,
         Otherinformation:req.body.Otherinformation,
+        Certificates:{
         EducationName:req.body.EducationName,
         Specialization:req.body.Specialization,
         Educationlevel:req.body.Educationlevel,
         Ed_StartDate:req.body.Ed_StartDate,
         Ed_EndDate:req.body.Ed_EndDate,
-        Appreciation:req.body.Appreciation,
+        Appreciation:req.body.Appreciation
+        },
+        experience:{
         CompanyName:req.body.CompanyName,
         Field:req.body.Field,
         Jobtitle:req.body.Jobtitle,
         Wo_StartDate:req.body.Wo_StartDate,
         Wo_EndDate:req.body.Wo_EndDate,
         JobDescription:req.body.JobDescription,
-        Exp_Country:req.body.Exp_Country,
+        Exp_Country:req.body.Exp_Country
+         },
+        Certificate:{
         COCName:req.body.COCName,
         NameOfDonor:req.body.NameOfDonor,
         ObtainedDate:req.body.ObtainedDate,
         CoField:req.body.Field,
-        Description:req.body.Description,
+        Description:req.body.Description
+        },
         skills:req.body.skills,
         profilePicture:req.file.path
 
@@ -219,11 +232,11 @@ router
   await  Userprofile.findOneAndUpdate(
       { userid:req.params.userid},
       {
-        $set: {
+        $set: { 
           profilePicture: req.file.path
         },
       },
-      { new: true },
+      { new: true }, 
       (err, Userprofile) => {
         if (err){ return res.status(500).send({ statusCode:500,status:false,msg:"فشل التحديث"});}
         const { profilePicture} = Userprofile._doc; 
