@@ -205,7 +205,6 @@ router
           statusCode:200,
           status:true,
           message: "تم تحديث الصورة بنجاح",
-          data: `https://g-bel-7-lalal-api-bf6ed.ondigitalocean.app/uploads/images/${req.file.originalname}`,
         };
         return res.status(200).send(response);
       }
