@@ -185,21 +185,32 @@ router.put('/updateprofile/:userid',middleware.checkAuthorization, upload.single
 
 
 //adding and update profile image
-router.put("/add/image/:userid",middleware.checkAuthorization,upload.single("profilePicture"),async(req, res) => {
-  try{
-  await  Companys.findOneAndUpdate(
-      {
+router
+.route("/add/image/:id")
+.patch(middleware.checkAuthorization,upload.single("profilePicture"),async(req, res) => {
+    await  Companys.findOneAndUpdate(
+         {
          userid:req.params.userid 
-      },
+      } ,
       {
-        profilePicture:req.file.path
-     
-    }
-  );
-  }catch (err) {
-    return res.status(400).json({statusCode:400,status:false,msg:err+"خطاء"})
-}
-});
+        $set: {
+          profilePicture: req.file.path
+        },
+      },
+      { new: true },
+      (err, Companys) => {
+        if (err){ return res.status(500).send({ statusCode:500,status:false,msg:"فشل التحديث"});}
+        const { profilePicture} = Companys._doc; 
+        const response = {
+          statusCode:200,
+          status:true,
+          message: "تم تحديث الصورة بنجاح",
+          data: `https://g-bel-7-lalal-api-bf6ed.ondigitalocean.app/uploads/images/${req.file.originalname}`,
+        };
+        return res.status(200).send(response);
+      }
+    );
+  });
 
 //....................................................coins................................................
 
