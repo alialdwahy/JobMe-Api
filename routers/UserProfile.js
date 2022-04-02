@@ -6,14 +6,9 @@ const nodemailer = require("nodemailer");
 let middleware = require("../config/middleware");
 const crypto = require('crypto');
 //
-
 const multer = require("multer");
 const path = require("path");
-const { nextTick } = require('process');
-const fs = require('fs');
-const { truncate } = require('lodash');
-
-//......................................................................................................//
+//...............................................................//
 //..................................Auth Email Application..............................................//
 //......................................................................................................//
 var transporter = nodemailer.createTransport({
@@ -58,8 +53,10 @@ const upload = multer({
   //......................................................................................................//
 //................................................REGISTER..............................................//
 //......................................................................................................//
-router.post("/register",upload.single("profilePicture"), async (req, res) => {
-    try {
+router.post("/register",upload.single("profilePicture"), async (req, res) =>
+ {
+    try 
+    {
             //..........................Create New User
       const newUser = new Userprofile({
       userid: req.body.userid ,
@@ -122,17 +119,18 @@ router.post("/register",upload.single("profilePicture"), async (req, res) => {
         status:true,
           msg: "تم إرسال بريد إلكتروني إلى حسابك يرجى التحقق",
       });
-    } catch (err) {
+    } 
+    catch (err) {
      return res.status(400).send({
         statusCode:400,
         status:false,
-        msg: "موجود مسبقا"})
+        msg:err+ "موجود مسبقا",})
     }
   });
 
   router.get('/verify-email',async(req,res)=>{
     try{
-      const token = req.query.token
+      const token = req.query.Token
       const user = await Userprofile.findOne({emailToken:token})
       if(user){
         user.emailToken = null
@@ -150,14 +148,14 @@ router.post("/register",upload.single("profilePicture"), async (req, res) => {
   });
   
 
-  router.get("/findprofile", async (req, res) => {
+  router.get("/findprofile/:userid",middleware.checkAuthorization, async (req, res) => {
     try {
-      const user = await Userprofile.find({userid:req.body.userid});
+      const user = await Userprofile.findOne({userid:req.params.userid});
         if (!user) {
           return res.status(500).json({
             statusCode:500,
             status:false,
-            msg: "خطأ",})
+            msg:err+ "خطأ",})
         }
         return res.status(200).send({
           statusCode:200,
@@ -175,10 +173,10 @@ router.post("/register",upload.single("profilePicture"), async (req, res) => {
     }
   });
 
-  router.put('/updateprofile',upload.single("profilePicture"),  async (req, res)=> {
+  router.put('/updateprofile/:userid',middleware.checkAuthorization,upload.single("profilePicture"),  async (req, res)=> {
     try {
-      await Users.findOneAndUpdate({_id: req.body.userid},{username: req.body.username });
-      await Userprofile.findOneAndUpdate({userid: req.body.userid},{
+      await Users.findOneAndUpdate({_id: req.params.userid},{username: req.body.username }).exec();
+      await Userprofile.findOneAndUpdate({userid: req.params.userid},{
         email: req.body.email,
         Gender:req.body.gender,
         country:req.body.country,
@@ -203,7 +201,7 @@ router.post("/register",upload.single("profilePicture"), async (req, res) => {
         CoField:req.body.Field,
         Description:req.body.Description,
         skills:req.body.skills,
-        profilePicture:req.file.path,
+        profilePicture:req.file.path
 
       })
       return res.status(200).json({statusCode:200,status:true,msg:"تم التعديل"})
@@ -214,29 +212,18 @@ router.post("/register",upload.single("profilePicture"), async (req, res) => {
 
 
 //adding and update profile image
-router
-  .route("/add/image/:id")
-  .patch(middleware.checkAuthorization,upload.single("profilePicture"),async(req, res) => {
+router.put('/add/image/:userid',middleware.checkAuthorization,upload.single("profilePicture"),async(req, res) => {
+ try{
   await  Userprofile.findOneAndUpdate(
-      { userid: req.params.id },
+      { userid:req.params.userid},
       {
-        $set: {
-          profilePicture: req.file.path
-        },
-      },
-      { new: true },
-      (err, Userprofile) => {
-        if (err){ return res.status(500).send({ statusCode:500,status:false,msg:"فشل التحديث"});}
-        const { profilePicture} = Userprofile._doc; 
-        const response = {
-          statusCode:200,
-          status:true,
-          message: "تم تحديث الصورة بنجاح",
-       //   data: `https://g-bel-7-lalal-api-bf6ed.ondigitalocean.app/uploads/images/${req.file.originalname}`,
-        };
-        return res.status(200).send(response);
+          profilePicture:req.file.path
+        
       }
     );
+    }catch (err) {
+      return res.status(400).json({statusCode:400,status:false,msg:err+"خطاء"})
+  }
   });
 
 

@@ -136,12 +136,8 @@ router.get('/verify-email', middleware.checkAuthorization,async(req,res)=>{
 //...................................Find user profile.....................................
 router.get("/findprofile/:userid",middleware.checkAuthorization,  async (req, res) => {
   try {
-    const user1 = await Users.findone({
-      _id:req.params.userid
-    });
-    const Company = await Companys.findone({
-      userid:req.params.userid
-    });
+    const user1 = await Users.findOne({_id:req.params.userid});
+    const Company = await Companys.findOne({userid:req.params.userid});
          if (!Company || !user1) {
         return res.status(500).json({
           statusCode:500,
@@ -160,7 +156,7 @@ router.get("/findprofile/:userid",middleware.checkAuthorization,  async (req, re
     res.status(500).json({
       status:false,
       statusCode:404,
-      msg:"لم يتم العثور",
+      msg:err+"لم يتم العثور",
     });
   }
 });
@@ -183,37 +179,27 @@ router.put('/updateprofile/:userid',middleware.checkAuthorization, upload.single
     })
     return res.status(200).json({statusCode:200,status:true,msg:"تم التعديل"})
 } catch (err) {
-    return res.status(400).json({statusCode:400,status:false,msg:"خطاء"})
+    return res.status(400).json({statusCode:400,status:false,msg:err+"خطاء"})
 }
 });
 
 
 //adding and update profile image
-router.put("/add/image/:id",middleware.checkAuthorization,upload.single("profilePicture"),async(req, res) => {
+router.put("/add/image/:userid",middleware.checkAuthorization,upload.single("profilePicture"),async(req, res) => {
   try{
   await  Companys.findOneAndUpdate(
-      { userid: req.params.id },
       {
-        $set: {
-          profilePicture: req.file.path
-        },
+         userid:req.params.userid 
       },
-      { new: true },
-      (err, Companys) => {
-        if (err){ return res.status(500).send({ statusCode:500,status:false,msg:"فشل التحديث"});}
-        const { profilePicture} = Companys._doc; 
-        const response = {
-          statusCode:200,
-          status:true,
-          message: "تم تحديث الصورة بنجاح",
-          //data: `https://g-bel-7-lalal-api-bf6ed.ondigitalocean.app/uploads/images/${req.file.originalname}`,
-        };
-        return res.status(200).send(response);
-      }
-    );}catch(err){
-      return res.status(404).send({ statusCode:404,status:false,msg:err});
+      {
+        profilePicture:req.file.path
+     
     }
-  });
+  );
+  }catch (err) {
+    return res.status(400).json({statusCode:400,status:false,msg:err+"خطاء"})
+}
+});
 
 //....................................................coins................................................
 
