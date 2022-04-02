@@ -36,10 +36,10 @@ return res.send({
 }
 });
 //user  user
-router.put("/:userid",middleware.checkAuthorization, async  (req, res) => {
+router.put("/:id",middleware.checkAuthorization, async  (req, res) => {
   try{
         const jobAdvertisement = await JobAdvertisement.findOneAndUpdate(
-          { userid: req.params.userid },
+          { _id: req.params.id },
           {
             $set: {
                 titleJob: req.body.titleJob,
