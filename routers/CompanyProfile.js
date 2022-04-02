@@ -186,7 +186,7 @@ router.put('/updateprofile/:userid',middleware.checkAuthorization, upload.single
 
 //adding and update profile image
 router
-.route("/add/image/:id")
+.route("/add/image/:userid")
 .patch(middleware.checkAuthorization,upload.single("profilePicture"),async(req, res) => {
     await  Companys.findOneAndUpdate(
          {
