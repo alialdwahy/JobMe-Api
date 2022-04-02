@@ -15,8 +15,8 @@ const AnnouncingMeSchema = new mongoose.Schema(
        default:Date.now,
       },
   expireDate:{
-    type: Number,
-    default: '2'
+    type: String,
+    default: '60'
   },
   userid:{
     type: mongoose.Schema.Types.ObjectId,ref: 'UserProfaile',
@@ -29,7 +29,7 @@ const AnnouncingMeSchema = new mongoose.Schema(
   expireAt: {
     type: Date,
     default: Date.now,
-    index: { expires: 'expireDate d' },
+    index: { expires: "expireDate" },
   },
   },
   { timestamps: true }
