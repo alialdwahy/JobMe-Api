@@ -23,37 +23,12 @@ var transporter = nodemailer.createTransport({
     }
   });
 
-  ///..........................................profile image........................................................
 
-const storage = multer.diskStorage({
-  destination: './uploads/images',
-  filename: (req, file, cb) => {
-
-      return cb(null, `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`)
-  }
-})
-
-
-const fileFilter = (req, file, cb) => {
-  if (file.mimetype == "image/jpeg" || file.mimetype == "image/png") {
-    cb(null, true);
-  } else {
-    cb(null, false);
-  }
-};
-
-const upload = multer({
-  storage: storage,
-  limits: {
-    fileSize: 1024 * 1024 * 6,
-  },
-  fileFilter: fileFilter,
-});
 
   //......................................................................................................//
 //................................................REGISTER..............................................//
 //......................................................................................................//
-router.post("/register",upload.single("profilePicture"), async (req, res) =>
+router.post("/register", async (req, res) =>
  {
     try 
     {
@@ -84,7 +59,6 @@ router.post("/register",upload.single("profilePicture"), async (req, res) =>
       CoField:req.body.Field,
       Description:req.body.Description,
       skills:req.body.skills,
-      profilePicture:req.file.path,
       emailToken:crypto.randomBytes(64).toString('hex'),
       });
   
@@ -173,7 +147,7 @@ router.post("/register",upload.single("profilePicture"), async (req, res) =>
     }
   });
 
-  router.put('/updateprofile/:userid',middleware.checkAuthorization,upload.single("profilePicture"),  async (req, res)=> {
+  router.put('/updateprofile/:userid',middleware.checkAuthorization,  async (req, res)=> {
     try {
       await Users.findOneAndUpdate({_id: req.params.userid},{username: req.body.username }).exec();
       await Userprofile.findOneAndUpdate({userid: req.params.userid},{
@@ -201,7 +175,6 @@ router.post("/register",upload.single("profilePicture"), async (req, res) =>
         CoField:req.body.Field,
         Description:req.body.Description,
         skills:req.body.skills,
-        profilePicture:req.file.path
 
       })
       return res.status(200).json({statusCode:200,status:true,msg:"تم التعديل"})
@@ -210,32 +183,57 @@ router.post("/register",upload.single("profilePicture"), async (req, res) =>
   }
   });
 
+///..........................................profile image........................................................
+
+const storage = multer.diskStorage({
+  destination: './uploads/images',
+  filename: (req, file, cb) => {
+
+      return cb(null, `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`)
+  }
+})
+
+
+const fileFilter = (req, file, cb) => {
+  if (file.mimetype == "image/jpeg" || file.mimetype == "image/png") {
+    cb(null, true);
+  } else {
+    cb(null, false);
+  }
+};
+
+const upload = multer({
+  storage: storage,
+  limits: {
+    fileSize: 1024 * 1024 * 6,
+  },
+  fileFilter: fileFilter,
+});
 
 //adding and update profile image
 router
-.route("/add/image/:userid")
-.patch(middleware.checkAuthorization,upload.single("profilePicture"),async(req, res) => {
-  
-  await  Userprofile.findOneAndUpdate(
-      { userid:req.params.userid},
+  .route("/add/image/:id")
+  .patch(middleware.checkAuthorization,upload.single("profilePicture"),async(req, res) => {
+  await  Userprofile.updateOne(
+      { _id: req.params.id },
       {
         $set: {
           profilePicture: req.file.path
         },
       },
       { new: true },
-      (err, Userprofile) => {
+      (err, user) => {
         if (err){ return res.status(500).send({ statusCode:500,status:false,msg:"فشل التحديث"});}
-        const { profilePicture} = Userprofile._doc; 
+        const { profilePicture} = user._doc; 
         const response = {
           statusCode:200,
           status:true,
           message: "تم تحديث الصورة بنجاح",
+          data: `./uploads/images/${req.file.originalname}`,
         };
         return res.status(200).send(response);
       }
     );
   });
-
 
 module.exports = router;  

@@ -68,7 +68,6 @@ const upload = multer({
       Country:req.body.Country,
       City:req.body.City,
       NumberOfEmploy:req.body.NumberOfEmploy,
-      profilePicture:req.file.path
 
    //   emailToken:crypto.randomBytes(64).toString('hex')
     });
